@@ -1,0 +1,28 @@
+version: '1'
+services:
+  codeigniter-app:
+    image: php:7.4fpm
+    volumes: 
+      - ./app/codeigniter:/var/www/html
+    ports:
+      - 9000:9000
+    depends_on:
+      - mariadb
+
+  nginx:
+    image: nginx
+    volumes:
+      - ./app/codeigniter:/var/www/html
+      - ./docker/nginx/default.conf:/etc/nginx.conf/default
+    ports:
+      - 8080:80
+    depends_on:
+      - codeigniter-app
+
+  mariadb:
+    image: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: passwd
+      MYSQL_DATABASE: mydatabase
+    ports:
+      - 3306:3306
